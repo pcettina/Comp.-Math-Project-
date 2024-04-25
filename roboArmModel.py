@@ -1,5 +1,6 @@
 import numpy as np
 import matplotlib.pyplot as plt
+from matplotlib.animation import FuncAnimation
 
 def coefCalc(a,b):
     if a<0:
@@ -57,6 +58,23 @@ def angle(theta, phi):
 
     return arm1, arm2
 
+def animate(theta_phi, x1=[], y1=[], x2=[], y2=[]):
+    plt.cla()
+    
+    theta,phi = theta_phi
+    print(np.cos(theta)**2 +np.sin(theta)**2)
+    print(np.cos(phi)**2 +np.sin(phi)**2)
+    arm1, arm2 =  angle(theta,phi)
+    r = vectorCalc(arm1,arm2)
+    x1.append(np.cos(theta))
+    y1.append(np.sin(theta))
+    x2.append(r[0][0])
+    y2.append(r[1][0])
+    
+    plt.axis((-5,5,-5,5))
+    plt.plot([0, x1[-1]],[0, y1[-1]],'r')
+    plt.plot([x1[-1],x2[-1]],[y1[-1],y2[-1]], 'b-')
+
 def main():
     l1 = 1
     l2 = 1
@@ -91,18 +109,11 @@ def main():
     theta = np.linspace(initTheta,finalTheta,10)
     phi = np.linspace(initPhi, finalPhi,10)
 
-    for i in range(10):
-        arm1, arm2 =  angle(theta[i],phi[i])
-        r = vectorCalc(arm1,arm2)
-        plot.plot([0, np.cos(theta[i])],[0, np.sin(theta[i])],'r')
-        plot.plot([np.cos(theta[i]),r[0][0]],[np.sin(theta[i]),r[1][0]], 'b-')
-    
+
+    fig = plt.figure()
+    ani = FuncAnimation(fig, animate, frames=zip(theta,phi), interval=10)
     
 
-    plot.set_xlim([-5,5])
-    plot.set_ylim([-5,5])
-
-    
     plt.show()
 
 
